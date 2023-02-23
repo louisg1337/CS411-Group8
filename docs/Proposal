@@ -14,7 +14,9 @@ https://developers.google.com/maps
 
 Web Scraper for News
 
-The idea is to find recent news or updates on famous people you select and email to you. The app will make the users input the list of famous people they want to be notified about. It will utilize the web scraper api to find the headlines or gossips about famous people and filter the ones that users might like the most.
+The idea is to find recent news or updates on famous people you select and email to you. 
+The app will make the users input the list of famous people they want to be notified about. 
+It will utilize the web scraper api to find the headlines or gossips about famous people and filter the ones that users might like the most.
 
 https://www.linkpreview.net/
 https://www.scraperapi.com/
