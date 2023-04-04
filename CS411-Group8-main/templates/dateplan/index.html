@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <p>Hello world!</p>
+<form method="post" action="{% url 'dateplan:results' %}">
+    {% csrf_token %}
+    <label for="search_term">Search term, one word only please:</label>
+    <input type="text" id="search_term" name="search_term">
+    <!-- additional form fields as needed -->
+    <input type="submit" value="Search">
+</form>
 {% endblock %}

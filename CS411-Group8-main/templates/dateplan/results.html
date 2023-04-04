@@ -1,0 +1,9 @@
+<!-- results.html -->
+{% for business in data.businesses %}
+    <div>
+        <h1>{{ business.name }}</h1>
+        <p>{{ business.rating }}</p>
+    </div>
+{% empty %}
+    <p>No results found.</p>
+{% endfor %}
