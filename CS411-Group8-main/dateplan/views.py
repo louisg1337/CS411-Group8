@@ -19,12 +19,10 @@ def results(request):
             'Authorization': 'Bearer %s' % YELP_API_KEY,
         }
         
-        print(search_term)
-        
         params = {
             'term': search_term,
             'location': 'San Francisco',
-            'limit': 1
+            'limit': 5
         }
         
         url = 'https://api.yelp.com/v3/businesses/search'

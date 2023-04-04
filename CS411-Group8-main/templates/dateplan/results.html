@@ -2,7 +2,9 @@
 {% for business in data.businesses %}
     <div>
         <h1>{{ business.name }}</h1>
-        <p>{{ business.rating }}</p>
+        <p>Rating: {{ business.rating }}</p>
+        <p>ID: {{ business.id }}</p>
+        <p>Price: {{ business.price }}</p>
     </div>
 {% empty %}
     <p>No results found.</p>
