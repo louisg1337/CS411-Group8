@@ -8,7 +8,6 @@ YELP_API_KEY = os.getenv('YELP_API_KEY')
 def index(request):
     return render(request, 'dateplan/index.html')
 
-
 def results(request):
     if request.method == 'POST':
         form_data = request.POST
