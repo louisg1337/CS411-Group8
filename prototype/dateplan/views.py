@@ -6,8 +6,7 @@ YELP_API_KEY = os.getenv('YELP_API_KEY')
 
 
 def index(request):
-    return render(request, 'dateplan/index.html')
-
+    return render(request, 'dateplan/Homepage.html')
 
 def results(request):
     if request.method == 'POST':
@@ -31,4 +30,4 @@ def results(request):
         return render(request, 'dateplan/results.html', {'data': data})
     else:
         return render(request, 'dateplan/index.html')
-    
+
