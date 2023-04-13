@@ -6,6 +6,9 @@ YELP_API_KEY = os.getenv('YELP_API_KEY')
 
 
 def index(request):
+    return render(request, 'dateplan/index.html')
+
+def homePage(request):
     return render(request, 'dateplan/Homepage.html')
 
 def results(request):
