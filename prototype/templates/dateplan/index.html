@@ -1,11 +1,74 @@
-{% extends 'base.html' %}
-{% block content %}
-<p>Hello world!</p>
-<form method="post" action="{% url 'dateplan:results' %}">
-    {% csrf_token %}
-    <label for="search_term">Search term, one word only please:</label>
-    <input type="text" id="search_term" name="search_term">
-    <!-- additional form fields as needed -->
-    <input type="submit" value="Search">
-</form>
-{% endblock %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'dateplanIndexStyle.css' %}">
+
+<body>
+    <div class="wrapper">
+        <div class="header"> 
+            <h1>Date Plan</h1>
+            <a href="/logout">Logout</a>
+        </div>
+        <form class="form" method="post" action="{% url 'dateplan:results' %}">
+            {% csrf_token %}
+            <div class="inputContainer">
+                <label for="weather">Consider the weather?</label>
+                <input class="input" type="checkbox" id="weather" name="weather">
+            </div>
+
+            <div class="deadContainer" id="dateContainer">
+                <label for="date">Choose a day:</label>
+                <input type="date" id="date" name="date" />
+            </div>
+
+            <div class="inputContainer">
+                <label for="search_term">What type of activites would you want to do?</label>
+                <input class="input" type="text" id="search_term" name="search_term">
+            </div>
+            
+            <div class="inputContainer">
+                <label for="numActivities">How many activities would you like to see?</label>
+                <input class="input" type="number" id="numActivities" name="numActivities">
+            </div>
+
+            <div class="inputContainer">
+                <label for="price">How expensive would you like the activites?</label>
+                <input class="input" list="price">
+                <datalist id="price">
+                    <option value="$">
+                    <option value="$$">
+                    <option value="$$$">
+                    <option value="$$$$">
+                </datalist>
+            </div>
+
+            <input type="submit" value="Search">
+        </form>
+    </div>
+</body>
+
+<script>
+    const weather = document.getElementById("weather");
+    const dateContainer = document.getElementById("dateContainer");
+ 
+    weather.addEventListener("change", function() {
+        if (weather.checked) {
+            dateContainer.classList.add("inputContainer")
+            dateContainer.classList.remove("deadContainer")
+        } else {
+            dateContainer.classList.remove("inputContainer")
+            dateContainer.classList.add("deadContainer")
+        }
+    })
+
+    const date = document.getElementById("date");
+
+    const minDate = new Date();
+    const minDateString = minDate.toISOString().split('T')[0];
+
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 7);
+    const maxDateString = maxDate.toISOString().split('T')[0];
+
+    date.setAttribute("min", minDateString);
+    date.setAttribute("max", maxDateString);
+
+</script>
