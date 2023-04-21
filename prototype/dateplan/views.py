@@ -75,7 +75,11 @@ def results(request):
                 else:
                     highest_rated_businesses.append(None)
             
-            return render(request, 'dateplan/results.html', {'data': highest_rated_businesses})
+            context = {
+                'weather': weather_data,
+                'data': highest_rated_businesses
+            }
+            return render(request, 'dateplan/results.html', context)
         
         else:
             # Get business with lowest price for each activity
