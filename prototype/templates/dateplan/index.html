@@ -23,6 +23,7 @@
     </div>
 
     <button type="button" id="add-activity-btn">Add another activity</button>
+    <button type="button" id="delete-activity-btn">Delete an activity</button>
     <br>
 
     
@@ -35,28 +36,45 @@
 
 <script>
     const activitiesContainer = document.getElementById('activities-container');
-    const addActivityBtn = document.getElementById('add-activity-btn');
+const addActivityBtn = document.getElementById('add-activity-btn');
+const deleteActivityBtn = document.getElementById('delete-activity-btn');
 
-    let activityCount = 1;
+let activityCount = 1;
 
-    addActivityBtn.addEventListener('click', () => {
-        if (activityCount < 4) {
-            activityCount++;
-            const newActivityInput = document.createElement('input');
-            newActivityInput.type = 'text';
-            newActivityInput.id = `activity${activityCount}`;
-            newActivityInput.name = 'activities[]';
-            newActivityInput.classList.add('activity-input');
-            const newActivityLabel = document.createElement('label');
-            newActivityLabel.for = `activity${activityCount}`;
-            newActivityLabel.textContent = `Activity ${activityCount}:`;
-            activitiesContainer.appendChild(newActivityLabel);
-            activitiesContainer.appendChild(newActivityInput);
-            activitiesContainer.appendChild(document.createElement('br'));
-        }
-        if (activityCount === 4) {
-            addActivityBtn.disabled = true;
-        }
-    });
+addActivityBtn.addEventListener('click', () => {
+    if (activityCount < 4) {
+        activityCount++;
+        const newActivityInput = document.createElement('input');
+        newActivityInput.type = 'text';
+        newActivityInput.id = `activity${activityCount}`;
+        newActivityInput.name = 'activities[]';
+        newActivityInput.classList.add('activity-input');
+        const newActivityLabel = document.createElement('label');
+        newActivityLabel.for = `activity${activityCount}`;
+        newActivityLabel.textContent = `Activity ${activityCount}:`;
+        activitiesContainer.appendChild(newActivityLabel);
+        activitiesContainer.appendChild(newActivityInput);
+        activitiesContainer.appendChild(document.createElement('br'));
+    }
+    if (activityCount === 4) {
+        addActivityBtn.disabled = true;
+    }
+    deleteActivityBtn.disabled = false;
+});
+
+deleteActivityBtn.addEventListener('click', () => {
+    if (activityCount > 1) {
+        const lastActivityInput = document.getElementById(`activity${activityCount}`);
+        const lastActivityLabel = lastActivityInput.previousSibling;
+        activitiesContainer.removeChild(lastActivityInput);
+        activitiesContainer.removeChild(lastActivityLabel);
+        activitiesContainer.removeChild(activitiesContainer.lastChild);
+        activityCount--;
+    }
+    if (activityCount < 4) {
+        addActivityBtn.disabled = false;
+    }
+    deleteActivityBtn.disabled = activityCount === 1;
+});
 </script>
 {% endblock %}
