@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('dateplan/', include('dateplan.urls')), 
     path('common/', include('common.urls')),
-    path('', views.index, name='index'),  # '/' 에 해당되는 path
+    path('', views.homePage, name='index'),  # '/' 에 해당되는 path
     path("", include("allauth.urls")), #most important
 ]

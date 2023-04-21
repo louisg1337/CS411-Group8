@@ -1,11 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
-<p>Hello world!</p>
+<p>Let's design your date!</p>
+<h1>Don't put space when you type!</h1>
 <form method="post" action="{% url 'dateplan:results' %}">
     {% csrf_token %}
-    <label for="search_term">Search term, one word only please:</label>
-    <input type="text" id="search_term" name="search_term">
+    <label for="city">City: </label>
+    <input type="text" id="city" name="city">
+    <br>
+    <label for="date">Date: (within next 5 days! >_<)</label>
+    <input type="date" id="date" name="date">
+    <br>
+    <label for="budget">Preference</label>
+    <select id="budget" name="budget">
+    <option value="budget">Budget</option>
+    <option value="quality">Quality</option>
+    </select>
+    <br>
+    <div id="activities-container">
+        <label for="activity1">Activity 1:</label>
+        <input type="text" id="activity1" name="activities[]" class="activity-input">
+        <br>
+    </div>
+
+    <button type="button" id="add-activity-btn">Add another activity</button>
+    <br>
+
+    
+
+    <!-- <label for="search_term"></label> -->
+    <!-- <input type="text" id="search_term" name="search_term"> -->
     <!-- additional form fields as needed -->
-    <input type="submit" value="Search">
+     <input type="submit" value="generate plan">
 </form>
+
+<script>
+    const activitiesContainer = document.getElementById('activities-container');
+    const addActivityBtn = document.getElementById('add-activity-btn');
+
+    let activityCount = 1;
+
+    addActivityBtn.addEventListener('click', () => {
+        if (activityCount < 4) {
+            activityCount++;
+            const newActivityInput = document.createElement('input');
+            newActivityInput.type = 'text';
+            newActivityInput.id = `activity${activityCount}`;
+            newActivityInput.name = 'activities[]';
+            newActivityInput.classList.add('activity-input');
+            const newActivityLabel = document.createElement('label');
+            newActivityLabel.for = `activity${activityCount}`;
+            newActivityLabel.textContent = `Activity ${activityCount}:`;
+            activitiesContainer.appendChild(newActivityLabel);
+            activitiesContainer.appendChild(newActivityInput);
+            activitiesContainer.appendChild(document.createElement('br'));
+        }
+        if (activityCount === 4) {
+            addActivityBtn.disabled = true;
+        }
+    });
+</script>
 {% endblock %}
