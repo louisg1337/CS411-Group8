@@ -1,4 +1,6 @@
 .env
-__pycache__/
+common/__pycache__/
+dateplan/__pycache__/
+django_project/__pycache__/
 *.py[cod]
 db.sqlite3
