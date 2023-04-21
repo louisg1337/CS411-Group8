@@ -1,5 +1,5 @@
 <!-- results.html -->
-{% for business in data.businesses %}
+<!-- {% for business in data.businesses %}
     <div>
         <h1>{{ business.name }}</h1>
         <p>Rating: {{ business.rating }}</p>
@@ -8,4 +8,40 @@
     </div>
 {% empty %}
     <p>No results found.</p>
-{% endfor %}
+{% endfor %} -->
+
+<!-- results.html -->
+
+<h1>Search Results:</h1>
+
+{% if data %}
+    {% for business in data %}
+        {% if business %}
+            <div>
+                <h1>{{ business.name }}</h1>
+                <p>Rating: {{ business.rating }}</p>
+                <!-- <p>ID: {{ business.id }}</p> -->
+                <p>Location: {{ business.location.address1 }}, {{ business.location.city }}, {{ business.location.state }} {{ business.location.zip_code }}</p>
+                <p>Price: {{ business.price }}</p>
+                <p>Reviews: {{ business.review_count }}</p>
+                <p><a href="{{ business.url }}">Visit website</a></p>
+            </div>
+        {% else %}
+            <p>No results found for this activity.</p>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>No data available.</p>
+{% endif %}
+
+{% if weather %}
+    <h1>Weather for {{ weather.name }}</h1>
+    <p>Date: {{ weather.date }}</p>
+    <p>Temperature you feel: {{ weather.main.feels_like|floatformat:0 }}°C</p>
+    <p>Max Temp: {{ weather.main.max }} °C</p>
+    <p>Min Temp: {{ weather.main.min }} °C</p>
+    <p>General: {{ weather.weather.0.description }}</p>
+{% endif %}
+
+
+
