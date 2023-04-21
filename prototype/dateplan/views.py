@@ -2,32 +2,113 @@ from django.shortcuts import render
 import requests
 import os
 
+from datetime import datetime
+import time
+import datetime
+
 YELP_API_KEY = os.getenv('YELP_API_KEY')
+WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')
 
 
 def index(request):
+    return render(request, 'dateplan/index.html')
+
+def homePage(request):
     return render(request, 'dateplan/Homepage.html')
+
+def get_weather(city, date):
+    # Use the current date if the date parameter is empty or None
+    if not date:
+        date_obj = datetime.datetime.now()
+    else:
+        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+    # Convert the datetime object to a Unix timestamp
+    date_timestamp = int(date_obj.strftime('%s'))
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&dt={date_timestamp}&appid={WEATHER_API_KEY}"
+    response = requests.get(url).json()
+    return response
 
 def results(request):
     if request.method == 'POST':
         form_data = request.POST
         # process the form data as needed
-        search_term = form_data['search_term']
+        date = form_data['date'] # use for weather prediction in later plan generation
+        city = form_data['city'] 
+        total_budget = form_data['budget']
+        activities = form_data.getlist('activities[]')
+        #search_term = form_data['search_term']
         
         headers = {
             'Authorization': 'Bearer %s' % YELP_API_KEY,
         }
         
-        params = {
-            'term': search_term,
-            'location': 'San Francisco',
-            'limit': 5
-        }
+        activity_data = []
         
-        url = 'https://api.yelp.com/v3/businesses/search'
-        response = requests.get(url, headers=headers, params=params)
-        data = response.json()
-        return render(request, 'dateplan/results.html', {'data': data})
+        for activity in activities:
+            params = {
+                'term': activity,
+                'location': city,
+                'limit': 10
+            }
+            
+            url = 'https://api.yelp.com/v3/businesses/search'
+            response = requests.get(url, headers=headers, params=params)
+            data = response.json()
+            
+            activity_data.append(data)
+
+        weather_data = get_weather(city, date)
+        weather_data['main']['feels_like'] = (int) (weather_data['main']['feels_like'] - 273.15) + 1
+        weather_data['main']['min'] = (int) (weather_data['main']['temp_min'] - 273.15) + 1
+        weather_data['main']['max'] = (int) (weather_data['main']['temp_max'] - 273.15) + 1
+        weather_data['date'] = date
+        print(weather_data)
+           
+
+
+        if total_budget == "quality":
+            # Get the business with the highest rating for each activity
+            highest_rated_businesses = []
+            for data in activity_data:
+                if len(data['businesses']) > 0:
+                    highest_rated_businesses.append(max(data['businesses'], key=lambda x: (x['rating'], x.get('review_count', 0))))
+                else:
+                    highest_rated_businesses.append(None)
+            
+            return render(request, 'dateplan/results.html', {'data': highest_rated_businesses})
+        
+        else:
+            # Get business with lowest price for each activity
+            price_map = {
+                '':1,
+                '$': 2,
+                '$$': 3,
+                '$$$': 4,
+                # Add more categories if needed
+            }
+
+            lowest_price_businesses = []
+            for data in activity_data:
+                if len(data['businesses']) > 0:
+                    filtered_businesses = [b for b in data['businesses'] if b['rating'] >= 2]
+                    if filtered_businesses:
+                        lowest_price_businesses.append(min(filtered_businesses, key=lambda x: price_map.get(x.get('price'), float('inf'))))
+                    else:
+                        lowest_price_businesses.append(None)
+                else:
+                    lowest_price_businesses.append(None)
+
+            lowest_price_businesses.sort(key=lambda x: price_map.get(x.get('price'), float('inf')))
+            context = {
+                'weather': weather_data,
+                'data': lowest_price_businesses
+            }
+            return render(request, 'dateplan/results.html', context)
+
+            
+
+
+        
     else:
         return render(request, 'dateplan/index.html')
 
