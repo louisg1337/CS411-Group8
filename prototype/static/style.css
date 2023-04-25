@@ -46,6 +46,18 @@ body {
   font-weight: bold;
   width: 100%;
   text-align: center;
+  margin-top: 10px;
+}
+
+.dateplan-searchHistory {
+  background-color: #ff7e36;
+  padding: 14px;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .dateplan-buttons3 {

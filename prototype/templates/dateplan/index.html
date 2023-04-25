@@ -27,19 +27,22 @@
         <br>
     </div>
 
-    <button type="button" class="dateplan-buttons1" id="add-activity-btn">Add another activity</button>
+    <button type="button" class="dateplan-buttons1" id="add-activity-btn">Add Activity</button>
+    <button type="button" class="dateplan-buttons1" id="delete-activity-btn">Delete Activity</button>
     <br>
 
     <!-- <label for="search_term"></label> -->
     <!-- <input type="text" id="search_term" name="search_term"> -->
     <!-- additional form fields as needed -->
-    <button class="dateplan-buttons2" type="submit" value="generate plan">generate plan</button>
+    <button class="dateplan-buttons2" type="submit" value="generate plan">Generate Plan</button>
+    <a href="{% url 'dateplan:user_history' %}" class="dateplan-searchHistory">View Search History</a>
 </form>
 </div>
 
 <script>
     const activitiesContainer = document.getElementById('activities-container');
     const addActivityBtn = document.getElementById('add-activity-btn');
+    const deleteActivityBtn = document.getElementById('delete-activity-btn');
 
     let activityCount = 1;
 
@@ -61,6 +64,22 @@
         if (activityCount === 4) {
             addActivityBtn.disabled = true;
         }
+        deleteActivityBtn.disabled = false;
     });
+
+    deleteActivityBtn.addEventListener('click', () => {
+        if (activityCount > 1) {
+            const lastActivityInput = document.getElementById(`activity${activityCount}`);
+            const lastActivityLabel = lastActivityInput.previousSibling;
+            activitiesContainer.removeChild(lastActivityInput);
+            activitiesContainer.removeChild(lastActivityLabel);
+            activitiesContainer.removeChild(activitiesContainer.lastChild);
+            activityCount--;
+        }
+        if (activityCount < 4) {
+            addActivityBtn.disabled = false;
+        }
+        deleteActivityBtn.disabled = activityCount === 1;
+    });     
 </script>
 {% endblock %}
