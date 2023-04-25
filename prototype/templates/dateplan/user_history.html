@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ request.user.username }}'s Search History</h1>
+
+    <form action="{% url 'dateplan:clear_history' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Clear History</button>
+    </form>
+    <form action="{% url 'dateplan:index' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Go Back</button>
+    </form>
+
+    {% if user_results %}
+        <ul>
+            {% for result in user_results %}
+                <li>
+                    <strong>Search Date:</strong> {{ result.created_at }}<br>
+                    <strong>Plan Date:</strong> {{ result.plan_date }}<br>
+                    <strong>Number of Activities:</strong> {{ result.data|length }}<br>
+                    <strong>Temperature:</strong> {{ result.weather.main.feels_like }}&deg;C<br>
+                    {% for business in result.data %}
+                    {% if business %}
+                        <div>
+                            <h1>{{ business.name }}</h1>
+                            <p>Rating: {{ business.rating }}</p>
+                            <!-- <p>ID: {{ business.id }}</p> -->
+                            <p>Location: {{ business.location.address1 }}, {{ business.location.city }}, {{ business.location.state }} {{ business.location.zip_code }}</p>
+                            <p>Price: {{ business.price }}</p>
+                            <p>Reviews: {{ business.review_count }}</p>
+                            <p><a href="{{ business.url }}">Visit website</a></p>
+                        </div>
+                    {% else %}
+                        <p>No results found for this activity.</p>
+                    {% endif %}
+                {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No search history found.</p>
+    {% endif %}
+{% endblock %}
