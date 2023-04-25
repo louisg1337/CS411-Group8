@@ -51,9 +51,13 @@ def results(request):
         # process the form data as needed
         date = form_data['date'] # use for weather prediction in later plan generation
         city = form_data['city'] 
+        
+        if not city:
+            city = "Boston"
+        
         total_budget = form_data['budget']
         activities = form_data.getlist('activities[]')
-        #search_term = form_data['search_term']
+        
         
         headers = {
             'Authorization': 'Bearer %s' % YELP_API_KEY,
@@ -62,6 +66,9 @@ def results(request):
         activity_data = []
         
         for activity in activities:
+            if activity == "":
+                activity = "restaurant"
+            
             params = {
                 'term': activity,
                 'location': city,
@@ -86,6 +93,7 @@ def results(request):
         if not date: 
             date = datetime.now().strftime('%Y-%m-%d')
             weather_data['date'] = date
+            
         # data_to_store = UserResult(
         #     searchDate = datetime.now(),
         #     planDate = date,

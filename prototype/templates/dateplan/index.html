@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <p>Let's design your date!</p>
-<h1>Don't put space when you type!</h1>
+<h1>Fill in your desired date plans!</h1>
 <form method="post" action="{% url 'dateplan:results' %}">
     {% csrf_token %}
     <label for="city">City: </label>
