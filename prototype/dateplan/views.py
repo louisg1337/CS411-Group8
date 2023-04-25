@@ -1,10 +1,16 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
+
 import requests
 import os
 
 from datetime import datetime
 import time
-import datetime
+from django.core import serializers
+
+from django.db import models
+from .models import PlanContext
+from django.contrib import messages
 
 YELP_API_KEY = os.getenv('YELP_API_KEY')
 WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')
@@ -16,17 +22,28 @@ def index(request):
 def homePage(request):
     return render(request, 'dateplan/Homepage.html')
 
+
 def get_weather(city, date):
     # Use the current date if the date parameter is empty or None
     if not date:
-        date_obj = datetime.datetime.now()
+        date_obj = datetime.now()
     else:
-        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+        date_obj = datetime.strptime(date, '%Y-%m-%d')
     # Convert the datetime object to a Unix timestamp
     date_timestamp = int(date_obj.strftime('%s'))
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&dt={date_timestamp}&appid={WEATHER_API_KEY}"
     response = requests.get(url).json()
     return response
+
+def user_history(request):
+    user_results = PlanContext.objects.filter(user=request.user).order_by('-created_at')
+    context = {'user_results': user_results}
+    return render(request, 'dateplan/user_history.html', context)
+
+def clear_history(request):
+    PlanContext.objects.filter(user=request.user).delete()
+    return redirect('dateplan:user_history')
+
 
 def results(request):
     if request.method == 'POST':
@@ -62,8 +79,23 @@ def results(request):
         weather_data['main']['min'] = (int) (weather_data['main']['temp_min'] - 273.15) + 1
         weather_data['main']['max'] = (int) (weather_data['main']['temp_max'] - 273.15) + 1
         weather_data['date'] = date
-        print(weather_data)
+        #print(weather_data)
            
+        # time data modification, must not change!
+        if not date: 
+            date = datetime.now().strftime('%Y-%m-%d')
+            weather_data['date'] = date
+        # data_to_store = UserResult(
+        #     searchDate = datetime.now(),
+        #     planDate = date,
+        #     num = len(activities),
+        #     temperature = weather_data['main']['feels_like']
+        # )
+        # data_to_store.save()
+        # result_id = data_to_store.id
+
+        # PlanContext.objects.all().delete()
+        # PlanContext.objects.filter(user=request.user).delete()
 
 
         if total_budget == "quality":
@@ -79,6 +111,13 @@ def results(request):
                 'weather': weather_data,
                 'data': highest_rated_businesses
             }
+            context_data = PlanContext(
+                user=request.user,
+                weather=weather_data,
+                data=highest_rated_businesses,
+                plan_date=date
+            )
+            context_data.save()
             return render(request, 'dateplan/results.html', context)
         
         else:
@@ -107,12 +146,18 @@ def results(request):
                 'weather': weather_data,
                 'data': lowest_price_businesses
             }
+            context_data = PlanContext(
+                user=request.user,
+                weather=weather_data,
+                data=lowest_price_businesses,
+                plan_date=date
+            )
+            context_data.save()
             return render(request, 'dateplan/results.html', context)
-
-            
-
 
         
     else:
         return render(request, 'dateplan/index.html')
+
+
 
