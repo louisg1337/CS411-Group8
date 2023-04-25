@@ -1,0 +1,38 @@
+.activityContainer {
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+
+.businessContainer {
+    border: solid black;
+    border-radius: 10%;
+    margin-right: 5%;
+    padding: 1%;
+}
+
+.activityNameContainer {
+    border-bottom: solid black;
+    width: 100%;
+    padding: 0;
+}
+
+.saveButton {
+    
+}
+
+.weatherContainer {
+    position: absolute;
+    bottom: 0;
+    border-top-right-radius: 10%;
+    width: 100%;
+}
+
+.innerWeatherContainer {
+    display: flex;
+    border-top: solid black;
+}
+
+.weatherDetails {
+    flex: 1
+}

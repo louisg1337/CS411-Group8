@@ -71,6 +71,8 @@ def results(request):
             url = 'https://api.yelp.com/v3/businesses/search'
             response = requests.get(url, headers=headers, params=params)
             data = response.json()
+            for business in data['businesses']:
+                business['activityName'] = activity
             
             activity_data.append(data)
 
@@ -79,7 +81,6 @@ def results(request):
         weather_data['main']['min'] = (int) (weather_data['main']['temp_min'] - 273.15) + 1
         weather_data['main']['max'] = (int) (weather_data['main']['temp_max'] - 273.15) + 1
         weather_data['date'] = date
-        #print(weather_data)
            
         # time data modification, must not change!
         if not date: 
@@ -146,6 +147,7 @@ def results(request):
                 'weather': weather_data,
                 'data': lowest_price_businesses
             }
+
             context_data = PlanContext(
                 user=request.user,
                 weather=weather_data,
@@ -153,6 +155,7 @@ def results(request):
                 plan_date=date
             )
             context_data.save()
+            
             return render(request, 'dateplan/results.html', context)
 
         
