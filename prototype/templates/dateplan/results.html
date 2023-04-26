@@ -15,7 +15,9 @@
 
 <link rel="stylesheet" href="{% static 'results.css' %}">
 
-<h1>Search Results:</h1>
+<h1>Search Results</h1>
+
+<a href="/dateplan" class="backButton">Back</a>
 
 <div class="activityContainer">
     {% if data %}
@@ -23,7 +25,7 @@
             {% if business %}
                 <div class="businessContainer">
                     <div class="activityNameContainer">
-                        <p>Place for: {{ business.activityName }}
+                        <p>Place for: <span class="focusedText">{{ business.activityName }}</span> </p>
                     </div>
                     <h1>{{ business.name }}</h1>
                     <p>Rating: {{ business.rating }}</p>
@@ -44,7 +46,7 @@
 
 {% if weather %}
     <div class="weatherContainer">
-        <h1>Weather for {{ weather.name }}</h1>
+        <h1>Weather for <span class="focusedText">{{ weather.name }}</span></h1>
         <div class="innerWeatherContainer">
             <p class="weatherDetails">Date: {{ weather.date }}</p>
             <p class="weatherDetails">Temperature you feel: {{ weather.main.feels_like|floatformat:0 }}°C</p>

@@ -6,13 +6,12 @@
 
 <div class="dateplan-container">
 <p class="page-title">Let's design your date!</p>
-<p class="warning">Don't put space when you type!</p>
 <form method="post" action="{% url 'dateplan:results' %}">
     {% csrf_token %}
     <label for="city">City</label><br>
     <input type="text" id="city" name="city">
     <br>
-    <label for="date">Date(within next 5 days! >_<)</label><br>
+    <label for="date">Date (within next 5 days! >_<)</label><br>
     <input type="date" id="date" name="date">
     <br>
     <label for="budget">Preference</label><br>
